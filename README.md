@@ -10,6 +10,8 @@ pinned: false
 
 # Quantum Threat Assessment & Migration Dashboard
 
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Hugging%20Face%20Spaces-blue)](https://huggingface.co/spaces/itsmevikashkumarsingh/quantum-threat-registry)
+[![Web Portal](https://img.shields.io/badge/Web%20Portal-Direct%20Link-green)](https://itsmevikashkumarsingh-quantum-threat-registry.hf.space)
 
 A security-oriented evaluation dashboard designed to audit enterprise infrastructure for classical cryptographic vulnerabilities and coordinate post-quantum cryptographic (PQC) migrations. The system scans configurations and X.509/PEM keys, log exposure statuses in a SQLite database, and packages data inside quantum-safe envelopes.
 
