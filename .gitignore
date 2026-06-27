@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Environments
+.env
+.venv/
+venv/
+ENV/
+
+# Databases
+*.db
+*.sqlite3
+
+# Test caches
+.pytest_cache/
+.coverage
+htmlcov/
