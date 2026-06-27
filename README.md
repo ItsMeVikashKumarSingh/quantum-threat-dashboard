@@ -1,4 +1,15 @@
+---
+title: Quantum Threat Registry
+emoji: 🛡️
+colorFrom: red
+colorTo: blue
+sdk: docker
+app_port: 7860
+pinned: false
+---
+
 # Quantum Threat Assessment & Migration Dashboard
+
 
 A security-oriented evaluation dashboard designed to audit enterprise infrastructure for classical cryptographic vulnerabilities and coordinate post-quantum cryptographic (PQC) migrations. The system scans configurations and X.509/PEM keys, log exposure statuses in a SQLite database, and packages data inside quantum-safe envelopes.
 
