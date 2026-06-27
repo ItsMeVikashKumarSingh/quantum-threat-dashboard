@@ -10,16 +10,17 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
-            --bg-primary: #0b0f19;
-            --bg-secondary: #161c2a;
-            --border-color: #242f47;
+            --bg-primary: #080c14;
+            --bg-secondary: #0f172a;
+            --border-color: #1e293b;
             --text-primary: #f8fafc;
-            --text-secondary: #94a3b8;
+            --text-secondary: #64748b;
             --color-high: #ef4444;
             --color-medium: #f59e0b;
             --color-low: #10b981;
-            --color-primary: #3b82f6;
-            --color-primary-hover: #2563eb;
+            --color-primary: #2563eb;
+            --color-primary-hover: #1d4ed8;
+            --bg-tab-active: #1e293b;
         }
 
         * {
@@ -41,96 +42,138 @@
             border-bottom: 1px solid var(--border-color);
             padding: 20px 40px;
             display: flex;
-            justify-content: space-between;
+            justify-content: flex-start;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
         }
 
         header h1 {
-            font-size: 1.5rem;
+            font-size: 1.35rem;
             font-weight: 600;
             letter-spacing: -0.025em;
-            display: flex;
-            align-items: center;
-            gap: 10px;
         }
 
         header .subtitle {
-            font-size: 0.875rem;
+            font-size: 0.85rem;
             color: var(--text-secondary);
+            margin-top: 4px;
         }
 
-        .header-actions form {
-            display: inline-block;
+        .header-actions {
+            margin-left: auto;
         }
 
         .btn-reset {
             background: transparent;
             border: 1px solid var(--border-color);
-            color: var(--text-secondary);
+            color: var(--text-primary);
             padding: 8px 16px;
             border-radius: 6px;
             cursor: pointer;
-            font-size: 0.875rem;
+            font-size: 0.85rem;
             font-weight: 500;
             transition: all 0.2s;
         }
 
         .btn-reset:hover {
-            color: var(--text-primary);
-            border-color: var(--text-secondary);
+            border-color: #475569;
             background-color: rgba(255, 255, 255, 0.05);
         }
 
         .main-container {
-            max-width: 1400px;
-            margin: 30px auto;
+            max-width: 1280px;
+            margin: 25px auto;
             padding: 0 20px;
             display: flex;
             flex-direction: column;
-            gap: 30px;
+            gap: 25px;
+        }
+
+        /* Tabbed Navigation */
+        .tabs-nav {
+            display: flex;
+            border-bottom: 1px solid var(--border-color);
+            gap: 10px;
+            margin-bottom: 10px;
+            overflow-x: auto;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            padding: 12px 20px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .tab-btn:hover {
+            color: var(--text-primary);
+        }
+
+        .tab-btn.active {
+            color: var(--text-primary);
+            border-bottom-color: var(--color-primary);
+            font-weight: 600;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
         }
 
         /* Stats Grid */
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 20px;
+            margin-bottom: 25px;
         }
 
         .stat-card {
             background-color: var(--bg-secondary);
             border: 1px solid var(--border-color);
             border-radius: 8px;
-            padding: 24px;
+            padding: 20px;
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 6px;
         }
 
         .stat-label {
-            font-size: 0.875rem;
+            font-size: 0.8rem;
             color: var(--text-secondary);
             font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
 
         .stat-value {
-            font-size: 2rem;
+            font-size: 1.75rem;
             font-weight: 700;
-            letter-spacing: -0.05em;
+            letter-spacing: -0.03em;
         }
 
         .stat-value.high { color: var(--color-high); }
         .stat-value.medium { color: var(--color-medium); }
         .stat-value.low { color: var(--color-low); }
 
-        /* Dashboard Grid */
+        /* Dashboard layouts */
         .dashboard-grid {
             display: grid;
-            grid-template-columns: 1.8fr 1.2fr;
-            gap: 30px;
+            grid-template-columns: 1.6fr 1.4fr;
+            gap: 25px;
         }
 
-        @media (max-width: 1024px) {
+        @media (max-width: 900px) {
             .dashboard-grid {
                 grid-template-columns: 1fr;
             }
@@ -147,13 +190,11 @@
         }
 
         .card-title {
-            font-size: 1.125rem;
+            font-size: 1.1rem;
             font-weight: 600;
             border-bottom: 1px solid var(--border-color);
             padding-bottom: 12px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            color: var(--text-primary);
         }
 
         /* Tables */
@@ -166,7 +207,7 @@
             width: 100%;
             border-collapse: collapse;
             text-align: left;
-            font-size: 0.875rem;
+            font-size: 0.85rem;
         }
 
         th {
@@ -179,35 +220,31 @@
         td {
             padding: 12px;
             border-bottom: 1px solid var(--border-color);
-        }
-
-        tr:last-child td {
-            border-bottom: none;
+            vertical-align: middle;
         }
 
         .badge {
             display: inline-block;
-            padding: 4px 8px;
+            padding: 3px 6px;
             border-radius: 4px;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             font-weight: 600;
-            text-transform: uppercase;
         }
 
-        .badge.high { background-color: rgba(239, 68, 68, 0.15); color: var(--color-high); }
-        .badge.medium { background-color: rgba(245, 158, 11, 0.15); color: var(--color-medium); }
-        .badge.low { background-color: rgba(16, 185, 129, 0.15); color: var(--color-low); }
+        .badge.high { background-color: rgba(239, 68, 68, 0.12); color: var(--color-high); }
+        .badge.medium { background-color: rgba(245, 158, 11, 0.12); color: var(--color-medium); }
+        .badge.low { background-color: rgba(16, 185, 129, 0.12); color: var(--color-low); }
 
         /* Forms */
         .form-group {
             display: flex;
             flex-direction: column;
-            gap: 8px;
-            margin-bottom: 16px;
+            gap: 6px;
+            margin-bottom: 14px;
         }
 
         label {
-            font-size: 0.875rem;
+            font-size: 0.8rem;
             font-weight: 500;
             color: var(--text-secondary);
         }
@@ -216,16 +253,17 @@
             background-color: var(--bg-primary);
             border: 1px solid var(--border-color);
             color: var(--text-primary);
-            padding: 10px 14px;
+            padding: 10px;
             border-radius: 6px;
-            font-size: 0.875rem;
+            font-size: 0.85rem;
             outline: none;
             width: 100%;
-            transition: border-color 0.2s;
+            transition: all 0.2s;
         }
 
         input[type="text"]:focus, input[type="number"]:focus, select:focus, textarea:focus {
-            border-color: var(--color-primary);
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
         }
 
         .btn-submit {
@@ -235,7 +273,7 @@
             padding: 10px 20px;
             border-radius: 6px;
             font-weight: 600;
-            font-size: 0.875rem;
+            font-size: 0.85rem;
             cursor: pointer;
             transition: background-color 0.2s;
             text-align: center;
@@ -257,15 +295,11 @@
             transition: background-color 0.2s;
         }
 
-        .btn-action:hover {
-            background-color: var(--color-primary-hover);
-        }
-
         /* Charts Layout */
         .charts-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 20px;
+            gap: 25px;
         }
 
         @media (max-width: 768px) {
@@ -278,31 +312,25 @@
             background-color: var(--bg-secondary);
             border: 1px solid var(--border-color);
             border-radius: 8px;
-            padding: 20px;
+            padding: 24px;
             display: flex;
             flex-direction: column;
-            align-items: center;
             gap: 15px;
+            min-height: 320px;
         }
 
-        .chart-title {
-            align-self: flex-start;
-            font-size: 0.875rem;
-            font-weight: 600;
-            color: var(--text-secondary);
+        .chart-wrapper {
+            position: relative;
+            flex-grow: 1;
+            width: 100%;
+            height: 240px;
         }
 
-        /* Tabs/Dropdowns styling */
-        .flex-row {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-
+        /* Sandbox Box */
         .sandbox-box {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
+            grid-template-columns: 1.1fr 0.9fr;
+            gap: 25px;
         }
 
         @media (max-width: 768px) {
@@ -316,213 +344,233 @@
 
     <header>
         <div>
-            <h1>🔐 Quantum Threat Registry & Audit</h1>
-            <div class="subtitle">Evaluate and Securing Enterprise Infrastructure Against Shor's Algorithm Vulnerabilities</div>
+            <h1>🔐 Enterprise Cryptographic Registry</h1>
+            <div class="subtitle">Evaluate infrastructure vulnerabilities and execute quantum-safe migrations</div>
         </div>
         <div class="header-actions">
             <form action="/reset" method="post">
-                <button type="submit" class="btn-reset">↺ Reset Dashboard</button>
+                <button type="submit" class="btn-reset">↺ Reset Baseline Records</button>
             </form>
         </div>
     </header>
 
     <div class="main-container">
         
-        <!-- Stats Row -->
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-label">Scanned Assets</div>
-                <div class="stat-value">{{ total_assets }}</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">High Risk (Legacy)</div>
-                <div class="stat-value high">{{ high_threat }}</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">Medium Risk (Classical)</div>
-                <div class="stat-value medium">{{ medium_threat }}</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">Migrated (Quantum-Safe)</div>
-                <div class="stat-value low">{{ migrated_count }}</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">Quantum Exposure Score</div>
-                <div class="stat-value" style="color: {% if quantum_risk_score > 60 %}var(--color-high){% elif quantum_risk_score > 30 %}var(--color-medium){% else %}var(--color-low){% endif %}">
-                    {{ quantum_risk_score }}%
-                </div>
-            </div>
+        <!-- Tabbed Navigation Bar -->
+        <div class="tabs-nav">
+            <button class="tab-btn active" onclick="switchTab(event, 'tab-overview')">📈 Overview & Metrics</button>
+            <button class="tab-btn" onclick="switchTab(event, 'tab-audit')">🛡️ Infrastructure Audit</button>
+            <button class="tab-btn" onclick="switchTab(event, 'tab-sandbox')">🔬 PQC Sandbox Simulator</button>
         </div>
 
-        <!-- Charts Section -->
-        <div class="charts-row">
-            <div class="chart-card">
-                <div class="chart-title">Asset Vulnerability Risk Breakdown</div>
-                <div style="position: relative; height:220px; width:220px">
-                    <canvas id="riskChart"></canvas>
+        <!-- 1. OVERVIEW TAB -->
+        <div id="tab-overview" class="tab-content active">
+            <!-- Stats Row -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">Scanned Assets</div>
+                    <div class="stat-value">{{ total_assets }}</div>
                 </div>
-            </div>
-            <div class="chart-card">
-                <div class="chart-title">Estimated Time-To-Crack Timeline (Shor's Algorithm Assumptions)</div>
-                <div style="position: relative; height:220px; width:100%">
-                    <canvas id="timelineChart"></canvas>
+                <div class="stat-card">
+                    <div class="stat-label">High Risk (Legacy)</div>
+                    <div class="stat-value high">{{ high_threat }}</div>
                 </div>
-            </div>
-        </div>
-
-        <!-- Primary Actions Area -->
-        <div class="dashboard-grid">
-            
-            <!-- Left Card: Audit Log Table -->
-            <div class="card">
-                <div class="card-title">Scanned Infrastructure Log</div>
-                <div class="table-container">
-                    {% if not assets %}
-                    <div style="text-align: center; color: var(--text-secondary); padding: 20px;">
-                        No assets scanned yet. Use the scan hub on the right to populate logs.
+                <div class="stat-card">
+                    <div class="stat-label">Medium Risk (Classical)</div>
+                    <div class="stat-value medium">{{ medium_threat }}</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Migrated (Quantum-Safe)</div>
+                    <div class="stat-value low">{{ migrated_count }}</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Quantum Exposure</div>
+                    <div class="stat-value" style="color: {% if quantum_risk_score > 60 %}var(--color-high){% elif quantum_risk_score > 30 %}var(--color-medium){% else %}var(--color-low){% endif %}">
+                        {{ quantum_risk_score }}%
                     </div>
-                    {% else %}
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Asset Name</th>
-                                <th>Type</th>
-                                <th>Identified Primitive</th>
-                                <th>Bit Size</th>
-                                <th>Quantum Threat</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for asset in assets %}
-                            <tr>
-                                <td><strong>{{ asset.name }}</strong></td>
-                                <td>{{ asset.asset_type }}</td>
-                                <td>{{ asset.detected_algorithm }}</td>
-                                <td>{{ asset.key_size if asset.key_size else 'N/A' }}</td>
-                                <td>
-                                    <span class="badge {% if asset.threat_level == 'High' %}high{% elif asset.threat_level == 'Medium' %}medium{% else %}low{% endif %}">
-                                        {{ asset.threat_level }}
-                                    </span>
-                                </td>
-                                <td>
-                                    {% if asset.threat_level != 'Low' %}
-                                    <form action="/migrate/{{ asset.id }}" method="post" class="flex-row">
-                                        <select name="target_algorithm" style="padding: 4px 8px; font-size: 0.75rem; width: auto; height: 28px;">
-                                            <option value="ML-KEM-768">ML-KEM-768</option>
-                                            <option value="ML-DSA-65">ML-DSA-65</option>
-                                        </select>
-                                        <button type="submit" class="btn-action">Migrate</button>
-                                    </form>
-                                    {% else %}
-                                    <span style="color: var(--color-low); font-size: 0.8rem; font-weight: 500;">Secured</span>
-                                    {% endif %}
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                    {% endif %}
                 </div>
             </div>
 
-            <!-- Right Card: Scanners & Forms -->
-            <div class="card">
-                <div class="card-title">Infrastructure Scanning Hub</div>
-                
-                <!-- File System / Certificate Upload -->
-                <div style="border: 1px dashed var(--border-color); padding: 15px; border-radius: 6px;">
-                    <h3 style="font-size: 0.9rem; font-weight: 600; margin-bottom: 10px;">📄 Scan Key Certificate or Configuration File</h3>
-                    <form action="/scan/file" method="post" enctype="multipart/form-data" class="flex-row">
-                        <input type="file" name="file" required style="font-size: 0.8rem; color: var(--text-secondary)">
-                        <button type="submit" class="btn-submit" style="padding: 6px 12px; font-size: 0.8rem;">Run Analysis</button>
-                    </form>
+            <!-- Charts Row -->
+            <div class="charts-row">
+                <div class="chart-card">
+                    <div class="chart-title">Risk Level Distribution</div>
+                    <div class="chart-wrapper">
+                        <canvas id="riskChart"></canvas>
+                    </div>
                 </div>
-
-                <!-- Database/Mock Asset Scanner Form -->
-                <div>
-                    <h3 style="font-size: 0.9rem; font-weight: 600; margin-bottom: 10px;">📋 Registry Asset Manually</h3>
-                    <form action="/scan/mock" method="post">
-                        <div class="form-group">
-                            <label for="asset_name">Asset Identifier / Address</label>
-                            <input type="text" id="asset_name" name="asset_name" placeholder="e.g., core_account_ledger" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="asset_type">Infrastructure Asset Type</label>
-                            <select id="asset_type" name="asset_type">
-                                <option value="Database Column">Database Column</option>
-                                <option value="API Endpoint">API Endpoint</option>
-                                <option value="File System">File System</option>
-                                <option value="Session Manager">Session Manager</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="detected_algorithm">Active Cryptographic Primitive</label>
-                            <select id="detected_algorithm" name="detected_algorithm">
-                                <option value="MD5">MD5 (Legacy Hash)</option>
-                                <option value="SHA-1">SHA-1 (Legacy Hash)</option>
-                                <option value="DES">DES (Broken Block Cipher)</option>
-                                <option value="3DES">3DES (Deprecated Block Cipher)</option>
-                                <option value="RC4">RC4 (Broken Stream Cipher)</option>
-                                <option value="RSA-1024">RSA-1024 (Legacy Asymmetric)</option>
-                                <option value="RSA-2048">RSA-2048 (Classical Asymmetric)</option>
-                                <option value="RSA-4096">RSA-4096 (Classical Asymmetric)</option>
-                                <option value="AES-128">AES-128 (Classical Symmetric)</option>
-                                <option value="AES-256">AES-256 (Classical Symmetric)</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="key_size">Key Size / Bit Length (Optional)</label>
-                            <input type="number" id="key_size" name="key_size" placeholder="e.g., 1024, 2048, 256">
-                        </div>
-                        <button type="submit" class="btn-submit" style="width: 100%;">Audit Asset</button>
-                    </form>
+                <div class="chart-card">
+                    <div class="chart-title">Estimated Time-to-Crack (Shor's Algorithm Scale)</div>
+                    <div class="chart-wrapper">
+                        <canvas id="timelineChart"></canvas>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- Bottom Card: Sandbox Simulator -->
-        <div class="card">
-            <div class="card-title">🔬 Post-Quantum Cryptographic Sandbox Simulator</div>
-            
-            <div class="sandbox-box">
-                <!-- Inputs -->
-                <div>
-                    <h4 style="font-size: 0.9rem; font-weight: 600; margin-bottom: 12px; color: var(--text-secondary)">PQC Encapsulation & Signing Sandbox</h4>
-                    <form action="/sandbox/encrypt" method="post" enctype="multipart/form-data">
-                        <div class="form-group">
-                            <label for="text_payload">Enter Text Payload</label>
-                            <textarea id="text_payload" name="text_payload" rows="3" placeholder="Enter sensitive payment data, transaction info, or messages to secure..."></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label for="file_payload">Or Upload Payload File</label>
-                            <input type="file" id="file_payload" name="file_payload" style="font-size: 0.8rem; color: var(--text-secondary)">
-                        </div>
-                        <div class="form-group">
-                            <label for="pqc_algorithm">Select Post-Quantum Primitive</label>
-                            <select id="pqc_algorithm" name="pqc_algorithm">
-                                <option value="ML-KEM-768">ML-KEM-768 (Module-Lattice Key Encapsulation)</option>
-                                <option value="ML-DSA-65">ML-DSA-65 (Module-Lattice Digital Signature)</option>
-                            </select>
-                        </div>
-                        <button type="submit" class="btn-submit" style="width: 100%;">Package & Generate Secure Download (.pqc)</button>
-                    </form>
-                </div>
+        <!-- 2. INFRASTRUCTURE AUDIT TAB -->
+        <div id="tab-audit" class="tab-content">
+            <div class="dashboard-grid">
                 
-                <!-- Theory Box -->
-                <div style="background-color: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 6px; padding: 20px; font-size: 0.875rem;">
-                    <h4 style="font-size: 0.9rem; font-weight: 600; margin-bottom: 12px; color: var(--color-primary)">How it works</h4>
-                    <p style="margin-bottom: 10px; color: var(--text-secondary)">
-                        When you package content in the sandbox:
-                    </p>
-                    <ol style="margin-left: 20px; margin-bottom: 15px; color: var(--text-secondary); display: flex; flex-direction: column; gap: 8px;">
-                        <li><strong>Key Agreement:</strong> The system runs a simulated <code>ML-KEM-768</code> encapsulation exchange, deriving a shared symmetric session key.</li>
-                        <li><strong>Data Protection:</strong> Data payloads are encrypted using the derived shared secret, protecting against "Store Now, Decrypt Later" scenarios.</li>
-                        <li><strong>Authenticity:</strong> An <code>ML-DSA-65</code> signing block is generated, binding the data hash to a lattice public key to prevent tampering.</li>
-                    </ol>
-                    <p style="color: var(--text-secondary); font-size: 0.8rem; border-top: 1px solid var(--border-color); padding-top: 10px;">
-                        <em>Note: The downloaded <code>.pqc</code> file contains the JSON encapsulation package, complete with simulated cryptographic hex headers (shared secrets, signatures, and public keys).</em>
-                    </p>
+                <!-- Left: Scanned Log Table -->
+                <div class="card">
+                    <div class="card-title">Infrastructure Threat Registry</div>
+                    <div class="table-container">
+                        {% if not assets %}
+                        <div style="text-align: center; color: var(--text-secondary); padding: 40px;">
+                            No assets registered. Scan configuration files or certificates using the scanner panel.
+                        </div>
+                        {% else %}
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Asset Name</th>
+                                    <th>Type</th>
+                                    <th>Active Primitive</th>
+                                    <th>Key Size</th>
+                                    <th>Threat Level</th>
+                                    <th>Migration Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for asset in assets %}
+                                <tr>
+                                    <td><strong>{{ asset.name }}</strong></td>
+                                    <td>{{ asset.asset_type }}</td>
+                                    <td><code>{{ asset.detected_algorithm }}</code></td>
+                                    <td>{{ asset.key_size if asset.key_size else 'N/A' }}</td>
+                                    <td>
+                                        <span class="badge {% if asset.threat_level == 'High' %}high{% elif asset.threat_level == 'Medium' %}medium{% else %}low{% endif %}">
+                                            {{ asset.threat_level }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        {% if asset.threat_level != 'Low' %}
+                                        <form action="/migrate/{{ asset.id }}" method="post" style="display: flex; gap: 8px; align-items: center;">
+                                            <select name="target_algorithm" style="padding: 6px; font-size: 0.75rem; width: auto; height: 28px; background-color: var(--bg-primary)">
+                                                <option value="ML-KEM-768">ML-KEM-768</option>
+                                                <option value="ML-DSA-65">ML-DSA-65</option>
+                                            </select>
+                                            <button type="submit" class="btn-action">Migrate</button>
+                                        </form>
+                                        {% else %}
+                                        <span style="color: var(--color-low); font-size: 0.8rem; font-weight: 600;">Secured</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Right: Scanners Panel -->
+                <div class="card">
+                    <div class="card-title">Vulnerability Assessment Scanner</div>
+                    
+                    <!-- File Upload Scanner -->
+                    <div style="border: 1px dashed var(--border-color); padding: 20px; border-radius: 6px; background-color: var(--bg-primary)">
+                        <h3 style="font-size: 0.875rem; font-weight: 600; margin-bottom: 10px;">📄 Parse Cryptographic Certificate / PEM Key</h3>
+                        <form action="/scan/file" method="post" enctype="multipart/form-data" style="display: flex; flex-direction: column; gap: 12px;">
+                            <input type="file" name="file" required style="font-size: 0.8rem; color: var(--text-secondary)">
+                            <button type="submit" class="btn-submit" style="align-self: flex-start; padding: 6px 12px; font-size: 0.8rem;">Upload & Audit</button>
+                        </form>
+                    </div>
+
+                    <!-- Manual Scanner -->
+                    <div>
+                        <h3 style="font-size: 0.875rem; font-weight: 600; margin-bottom: 14px;">📋 Register Infrastructure Asset Manually</h3>
+                        <form action="/scan/mock" method="post">
+                            <div class="form-group">
+                                <label for="asset_name">Asset Name / Endpoint Address</label>
+                                <input type="text" id="asset_name" name="asset_name" placeholder="e.g., db_payment_columns" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="asset_type">Asset Category</label>
+                                <select id="asset_type" name="asset_type">
+                                    <option value="Database Column">Database Column</option>
+                                    <option value="API Endpoint">API Endpoint</option>
+                                    <option value="File System">File System</option>
+                                    <option value="Session Manager">Session Manager</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="detected_algorithm">Active Cryptographic Primitive</label>
+                                <select id="detected_algorithm" name="detected_algorithm">
+                                    <option value="MD5">MD5 (Legacy Hash)</option>
+                                    <option value="SHA-1">SHA-1 (Legacy Hash)</option>
+                                    <option value="DES">DES (Broken Block Cipher)</option>
+                                    <option value="3DES">3DES (Deprecated Block Cipher)</option>
+                                    <option value="RC4">RC4 (Broken Stream Cipher)</option>
+                                    <option value="RSA-1024">RSA-1024 (Legacy Asymmetric)</option>
+                                    <option value="RSA-2048">RSA-2048 (Classical Asymmetric)</option>
+                                    <option value="RSA-4096">RSA-4096 (Classical Asymmetric)</option>
+                                    <option value="AES-128">AES-128 (Classical Symmetric)</option>
+                                    <option value="AES-256">AES-256 (Classical Symmetric)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="key_size">Key Size / Bit Length (Optional)</label>
+                                <input type="number" id="key_size" name="key_size" placeholder="e.g., 256, 1024, 2048">
+                            </div>
+                            <button type="submit" class="btn-submit" style="width: 100%;">Audit Registry</button>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- 3. PQC SANDBOX TAB -->
+        <div id="tab-sandbox" class="tab-content">
+            <div class="card">
+                <div class="card-title">🔬 Post-Quantum Cryptographic Sandbox</div>
+                
+                <div class="sandbox-box">
+                    <!-- Inputs -->
+                    <div>
+                        <h4 style="font-size: 0.875rem; font-weight: 600; margin-bottom: 12px; color: var(--text-secondary)">Simulation Suite</h4>
+                        <form action="/sandbox/encrypt" method="post" enctype="multipart/form-data">
+                            <div class="form-group">
+                                <label for="text_payload">Enter Plaintext Payload</label>
+                                <textarea id="text_payload" name="text_payload" rows="3" placeholder="Enter sensitive payment data, transaction info, or database backups to encrypt..."></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="file_payload">Or Upload Data File</label>
+                                <input type="file" id="file_payload" name="file_payload" style="font-size: 0.8rem; color: var(--text-secondary)">
+                            </div>
+                            <div class="form-group">
+                                <label for="pqc_algorithm">Select Post-Quantum Algorithm</label>
+                                <select id="pqc_algorithm" name="pqc_algorithm">
+                                    <option value="ML-KEM-768">ML-KEM-768 (Lattice Key Encapsulation)</option>
+                                    <option value="ML-DSA-65">ML-DSA-65 (Lattice Digital Signature)</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn-submit" style="width: 100%;">Encrypt & Generate PQC Package (.pqc)</button>
+                        </form>
+                    </div>
+                    
+                    <!-- Sandbox Info Panel -->
+                    <div style="background-color: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 6px; padding: 24px; font-size: 0.85rem; display: flex; flex-direction: column; gap: 15px;">
+                        <h4 style="font-size: 0.9rem; font-weight: 600; color: #3b82f6;">Lattice-Based Encryption Model</h4>
+                        <p style="color: var(--text-secondary)">
+                            This sandbox simulates the cryptographic output of NIST's standardized Module-Lattice-Based protocols:
+                        </p>
+                        <ul style="list-style-type: none; display: flex; flex-direction: column; gap: 12px;">
+                            <li>
+                                <strong style="color: var(--text-primary)">ML-KEM (FIPS 203):</strong>
+                                <span style="color: var(--text-secondary)">Generates simulated encapsulated ciphertexts and shared session secrets, preventing decryption of recorded ciphertexts in the future.</span>
+                            </li>
+                            <li>
+                                <strong style="color: var(--text-primary)">ML-DSA (FIPS 204):</strong>
+                                <span style="color: var(--text-secondary)">Constructs structured signature variables to bind the payload authenticity to a private key that cannot be forged by quantum cryptanalysis.</span>
+                            </li>
+                        </ul>
+                        <p style="font-size: 0.75rem; color: var(--text-secondary); border-top: 1px solid var(--border-color); padding-top: 12px;">
+                            <em>Note: The generated package includes active hex headers representing public keys, signatures, and shared secrets.</em>
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -530,7 +578,32 @@
     </div>
 
     <script>
-        // Risk Chart Initialization
+        // Tab switching logic
+        function switchTab(evt, tabId) {
+            // Hide all tab contents
+            const contents = document.getElementsByClassName("tab-content");
+            for (let i = 0; i < contents.length; i++) {
+                contents[i].className = "tab-content";
+            }
+
+            // Remove active status from all tab buttons
+            const buttons = document.getElementsByClassName("tab-btn");
+            for (let i = 0; i < buttons.length; i++) {
+                buttons[i].className = "tab-btn";
+            }
+
+            // Show active tab and set active button state
+            document.getElementById(tabId).className = "tab-content active";
+            evt.currentTarget.className = "tab-btn active";
+
+            // Re-render / resize charts to prevent layout collapses
+            if (tabId === 'tab-overview') {
+                riskChart.resize();
+                timelineChart.resize();
+            }
+        }
+
+        // Risk Chart Setup
         const riskCtx = document.getElementById('riskChart').getContext('2d');
         const riskChart = new Chart(riskCtx, {
             type: 'doughnut',
@@ -539,7 +612,7 @@
                 datasets: [{
                     data: [{{ high_threat }}, {{ medium_threat }}, {{ low_threat }}],
                     backgroundColor: ['#ef4444', '#f59e0b', '#10b981'],
-                    borderColor: '#161c2a',
+                    borderColor: '#0f172a',
                     borderWidth: 2
                 }]
             },
@@ -577,9 +650,9 @@
                 scales: {
                     y: {
                         type: 'logarithmic',
-                        grid: { color: '#242f47' },
+                        grid: { color: '#1e293b' },
                         ticks: {
-                            color: '#94a3b8',
+                            color: '#64748b',
                             callback: function(value, index, values) {
                                 if (value === 0.0000001) return "Seconds";
                                 if (value === 0.001) return "Minutes";
@@ -592,7 +665,7 @@
                     },
                     x: {
                         grid: { display: false },
-                        ticks: { color: '#94a3b8', font: { family: 'Inter', size: 11 } }
+                        ticks: { color: '#64748b', font: { family: 'Inter', size: 11 } }
                     }
                 },
                 plugins: {
