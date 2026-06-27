@@ -1,0 +1,12 @@
+services:
+  dashboard:
+    build: .
+    image: quantum-threat-dashboard:latest
+    container_name: qt-dashboard
+    ports:
+      - "8001:7860"
+    volumes:
+      - .:/app
+    environment:
+      - PYTHONUNBUFFERED=1
+      - PYTHONDONTWRITEBYTECODE=1
